@@ -1,3 +1,5 @@
+#This project uses the following superstore data:
+
 CREATE TABLE superstore (
     item_id INTEGER PRIMARY KEY,
     item_name TEXT,
@@ -24,3 +26,25 @@ VALUES
     (13, 'Slow Cooker', 'Appliances', 49.95, 30, 4.7),
     (14, 'Cutlery Set', 'Kitchen Supplies', 34.50, 40, 4.4),
     (15, 'Cozy Throw Blanket', 'Furnishings', 24.99, 100, 4.2);
+
+#For this project, I used SQL to query the Superstore database to get information about items sold and their prices.
+
+#Used SELECT to view the data in the table.
+SELECT *
+FROM superstore;
+
+#Used SELECT and ORDER BY to sort the items by price.
+SELECT item_name, price
+FROM superstore
+ORDER BY price desc;
+
+#Used SELECT, GROUP BY, and ORDER BY to group the items by category and order them by the average of their average ratings.
+SELECT category, AVG(average_rating)
+FROM superstore
+GROUP BY category
+ORDER BY AVG(average_rating) desc;
+
+#Used SELECT and WHERE to view the data for a particular category
+SELECT item_name, category, price, stock_quantity, average_rating
+FROM superstore
+WHERE category="Kitchen Supplies";
