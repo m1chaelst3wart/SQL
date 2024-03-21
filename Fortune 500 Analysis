@@ -55,3 +55,30 @@ VALUES
     ('Company II', 'Telecommunications', 110.5, 2000, 1, 21, 12, 4.9),
     ('Company JJ', 'Manufacturing', 370.0, 3100, 1, 20, 12, 7.6),
     ('Company KK', 'Healthcare', 150.2, 3400, 0, 16, 8, 5.3);
+
+# See all the data
+SELECT *
+FROM fortune_companies;
+
+# Reclassify companies based on number of employees
+SELECT company_name, industry, employees,
+CASE WHEN employees >= 1000000 THEN "Very Large"
+WHEN employees >= 100000 THEN "Large"
+WHEN employees >= 10000 THEN "MidSized"
+WHEN employees >= 2500 THEN "Small"
+ELSE "Very Small"
+END AS BusinessSize
+FROM fortune_companies
+ORDER BY employees desc;
+
+# Grouped companies by industry with average revenue and number of employees
+SELECT industry, ROUND(avg(revenue),1) AS avg_revenue, ROUND(avg(employees),0) AS avg_employees
+FROM fortune_companies
+GROUP BY industry;
+
+# Limited previous query by just those who offer healthcare benfits, ranked by average revenue
+SELECT industry, healthcare_benefits, ROUND(avg(revenue),1) AS avg_revenue, ROUND(avg(employees),0) AS avg_employees
+FROM fortune_companies
+WHERE healthcare_benefits=1
+GROUP BY industry
+ORDER BY avg_revenue desc;
