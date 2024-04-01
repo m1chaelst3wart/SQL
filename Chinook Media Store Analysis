@@ -1,0 +1,116 @@
+## Sample Queries using fake data from Chinook, a digital media store and includes tables for artists, albums, media tracks, invoices, and customers
+
+# Q: Show Customers (their full names, customer ID, and country) who are not in the US
+SELECT CustomerID, FirstName, LastName, Country
+FROM chinook.customers 
+WHERE Country<>'USA'
+
+# Q: Show only the Customers from Brazil
+SELECT CustomerID, FirstName, LastName, Country
+FROM chinook.customers
+WHERE Country='Brazil'
+
+# Q: Find the Invoices of customers who are from Brazil. The resulting table should show the customers full name, Invoice ID, Date of the invoice, and billing country
+SELECT c.FirstName, c.LastName, i.InvoiceID, i.InvoiceDate, i.BillingCountry
+FROM chinook.customers c
+LEFT JOIN chinook.invoices i
+ON c.CustomerID=i.CustomerID
+WHERE i.BillingCountry='Brazil'
+
+# Q: Show the Employees who are Sales Agents
+SELECT *
+FROM chinook.employees
+WHERE TITLE='Sales Support Agent'
+
+# Q: Find a unique/distinct list of billing countries from the Invoice table
+SELECT distinct BillingCountry
+FROM chinook.invoices
+ORDER BY BillingCountry
+
+# Q: Provide a query that shows the invoices associated with each sales agent. The resulting table should include the Sales Agents full name
+SELECT i.InvoiceID, e.FirstName, e.LastName
+FROM chinook.invoices i
+LEFT JOIN chinook.customers c
+ON i.customerId=c.customerId
+LEFT JOIN chinook.employees e
+ON c.SupportRepID=e.EmployeeId
+ORDER BY e.LastName
+
+# Q: Show the Invoice Total, Customer name, Country, and Sales Agent name for all invoices and customers
+SELECT i.Total Inv_Total, c.FirstName Cust_FirstName, c.LastName Cust_LastName, c.Country Cust_Country, e.FirstName Emp_FirstName, e.LastName Emp_LastName
+FROM chinook.invoices i
+LEFT JOIN chinook.customers c
+ON i.customerId=c.customerId
+LEFT JOIN chinook.employees e
+ON c.SupportRepID=e.EmployeeId
+
+# Q: How many Invoices were there in 2009
+SELECT Count(InvoiceDate)
+FROM chinook.invoices
+WHERE InvoiceDate like '2009%'
+
+# Q: What are the total sales for 2009
+SELECT ROUND(SUM(Total),2)
+FROM chinook.invoices
+WHERE InvoiceDate like '2009%'
+
+# Q: Write a query that includes the purchased track name with each invoice line ID
+SELECT i.InvoiceId, c.FirstName, c.LastName, i.Total, t.Name
+FROM chinook.invoices i
+LEFT JOIN chinook.customers c
+ON i.customerId=c.CustomerId
+LEFT JOIN chinook.invoice_items ii
+ON i.invoiceId=ii.InvoiceID
+LEFT JOIN chinook.tracks t
+ON t.TrackId=ii.TrackId
+ORDER BY i.InvoiceId
+
+# Q: Write a query that includes the purchased track name AND artist name with each invoice line ID
+SELECT i.InvoiceId, t.Name TrackName, a.Name ArtistName
+FROM chinook.invoices i
+LEFT JOIN chinook.customers c
+ON i.customerId=c.CustomerId
+LEFT JOIN chinook.invoice_items ii
+ON i.invoiceId=ii.InvoiceID
+LEFT JOIN chinook.tracks t
+ON t.TrackId=ii.TrackId
+LEFT JOIN chinook.albums
+ON t.ALbumId=albums.AlbumId
+LEFT JOIN chinook.artists a
+ON albums.ArtistId=a.ArtistId
+Order By i.InvoiceId
+
+# Q: Provide a query that shows all the Tracks, and include the Album name, Media type, and Genre
+SELECT t.Name TrackName, a.Title AlbumTitle, m.Name MediaType, g.Name Genre
+FROM chinook.tracks t
+LEFT JOIN chinook.albums a
+ON t.AlbumId=a.AlbumId
+LEFT JOIN chinook.media_types m
+ON t.MediaTypeId=m.MediaTypeId
+LEFT JOIN chinook.genres g
+ON t.genreId=g.GenreId
+
+# Q: Show the total sales made by each sales agent
+SELECT e.FirstName EmpFirstName, e.LastName EmpLastName, ROUND(SUM(i.Total),2) TotalSales
+FROM chinook.employees e
+LEFT JOIN chinook.customers c
+ON e.EmployeeId=c.SupportRepId
+LEFT JOIN chinook.invoices i
+ON c.CustomerId=i.CustomerId
+WHERE TITLE='Sales Support Agent'
+GROUP BY e.EmployeeId
+ORDER BY e.LastName
+
+# Q: Which sales agent made the most dollars in sales in 2009
+SELECT e.FirstName EmpFirstName, e.LastName EmpLastName, ROUND(SUM(i.Total),2) TotalSales
+FROM chinook.employees e
+LEFT JOIN chinook.customers c
+ON e.EmployeeId=c.SupportRepId
+LEFT JOIN chinook.invoices i
+ON c.CustomerId=i.CustomerId
+WHERE TITLE='Sales Support Agent'
+AND InvoiceDate like '2009%'
+GROUP BY e.EmployeeId
+ORDER BY TotalSales desc
+LIMIT 1
+
