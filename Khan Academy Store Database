@@ -1,1 +1,21 @@
+CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT, quantity INTEGER, aisle INTEGER, price INTEGER);
+INSERT INTO products VALUES (1, "Hammer", 11, 3, 4.99);
+INSERT INTO products VALUES (2, "Nails", 88, 3, .99);
+INSERT INTO products VALUES (3, "Screwdriver", 4, 4, 6.99);
+INSERT INTO products VALUES (4, "Screws", 65, 4, 1.99);
+INSERT INTO products VALUES (5, "Toolbox", 3, 1, 19.99);
+INSERT INTO products VALUES (6, "2x4 wood", 20, 5, 9.99);
+INSERT INTO products VALUES (7, "2x6 wood", 20, 5, 10.99);
+INSERT INTO products VALUES (8, "2x8 wood", 20, 5, 12.99);
+INSERT INTO products VALUES (9, "4x4 wood", 20, 5, 11.99);
+INSERT INTO products VALUES (10, "plywood", 20, 5, 14.99);
+INSERT INTO products VALUES (11, "4x8 wood", 20, 5, 16.99);
+INSERT INTO products VALUES (12, "tape measure", 7, 1, 9.99);
+INSERT INTO products VALUES (13, "lawn mower", 3, 2, 99.99);
+INSERT INTO products VALUES (14, "weed eater", 4, 2, 79.99);
+INSERT INTO products VALUES (15, "leaf blower", 5, 2, 69.99);
+
+SELECT * FROM products;
+SELECT aisle, AVG(price) FROM products GROUP BY aisle;
+SELECT aisle, SUM(quantity*price) FROM products GROUP BY aisle
 
